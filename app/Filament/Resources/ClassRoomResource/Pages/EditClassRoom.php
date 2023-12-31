@@ -20,9 +20,6 @@ class EditClassRoom extends EditRecord
     protected function mutateFormDataBeforeFill(array $data): array
     {
         $data['schedule'] = json_decode($data['schedule'], true);
-        $courseSemester = $this->record->courseSemester;
-        $data['course_id'] = $courseSemester->course_id;
-        $data['semester_id'] = $courseSemester->semester_id;
         return $data;
     }
 }

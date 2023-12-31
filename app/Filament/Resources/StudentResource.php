@@ -9,6 +9,7 @@ use App\Models\Course;
 use App\Models\Major;
 use App\Models\Semester;
 use App\Models\Student;
+use App\Models\User;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -19,6 +20,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class StudentResource extends Resource
 {
@@ -128,20 +130,36 @@ class StudentResource extends Resource
                                     })->reactive(),
                             ]
                         ),
+                        Forms\Components\Section::make(__('Học phần cá nhân'))->columnSpan(3)->schema(
+                            [
+                                Forms\Components\Repeater::make('class')->label('')->disabled()->visibleOn('edit')->schema(
+                                    [
+                                        Forms\Components\Grid::make(5)->schema(
+                                            [
+                                                Forms\Components\TextInput::make('code')->label(__('Học phần - lớp - học kỳ'))->columnSpan(2),
+                                                Forms\Components\TextInput::make('status')->label(__('status')),
+                                                Forms\Components\TextInput::make('score')->label(__('Total score')),
+                                                Forms\Components\TextInput::make('result')->label(__('Kết quả')),
+                                            ]
+                                        ),
+                                    ]
+                                ),
+                            ]
+                        )->visibleOn('edit'),
                     ]
                 )
-            ]);
+            ])->disabled(fn($record) => Auth::user()->role == User::ROLE_STUDENT);
     }
 
     public static function table(Table $table): Table
     {
-        return $table
+        $table
             ->columns([
                 Tables\Columns\TextColumn::make('code')->label(__('student code'))->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('name')->label(__('student name'))->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('student.major')->label(__('major'))->state(fn($record) => $record->major->name . ' - ' . $record->major->code),
-                Tables\Columns\TextColumn::make('information')->label(__('information'))
-                    ->state(function($record){
+                Tables\Columns\TextColumn::make('information')->label(__('Thông tin'))
+                    ->state(function ($record) {
                         $statusColor = match ($record->status) {
                             Student::STATUS_STUDYING => 'green',
                             Student::STATUS_FINISHED => 'red',
@@ -152,10 +170,14 @@ class StudentResource extends Resource
                             Student::STATUS_FINISHED => 'Đã tốt nghiệp',
                             Student::STATUS_GRADUATED => 'Đã ra trường',
                         };
+                        $schoolarShip = $record->schoolarShip() ? 'Có' : 'Không';
+                        $clColor = $record->schoolarShip() ? 'green' : '';
                         return
-                        '<span class="mr-1">Email : </span>'.$record->email.'<br>'.
-                        '<span class="mr-1">Số điện thoại : </span>'.$record->phone.'<br>'.
-                        '<div style="color:'.$statusColor.'"><span class="mr-1">Trạng thái: </span>'.$statusText.'<br></div>';
+                            '<span class="mr-1">Email : </span>' . $record->email . '<br>' .
+                            '<span class="mr-1">Số điện thoại : </span>' . $record->phone . '<br>' .
+                            '<span class="mr-1">Trung bình môn : </span>' . $record->avgScore() . '<br>' .
+                            '<span class="mr-1" style="color:' . $clColor . '">Học bổng : </span>' . $schoolarShip . '<br>' .
+                            '<div style="color:' . $statusColor . '"><span class="mr-1">Trạng thái: </span>' . $statusText . '<br></div>';
                     })->html(),
 
             ])
@@ -168,14 +190,21 @@ class StudentResource extends Resource
                         })->toArray()
                 )->label(__('major'))->multiple(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+        if (Auth::user()->role == User::ROLE_STUDENT) {
+            $table->modifyQueryUsing(function (Builder $query) {
+                return $query->where('email', Auth::user()->email);
+            });
+        } else {
+            $table->actions([
+                Tables\Actions\EditAction::make()
+            ]);
+        }
+        return $table;
     }
 
     public static function getRelations(): array

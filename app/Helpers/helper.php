@@ -32,3 +32,28 @@ function replaceAccentedCharacters(string $string): string
 {
     return iconv('UTF-8', 'ASCII//TRANSLIT', $string);
 }
+
+
+function calcTotalScore(float $attendance, float $midterm, float $final): float
+{
+    $t = (float)($attendance * 0.1 + $midterm * 0.3 + $final * 0.6);
+    return round($t, 2);
+}
+
+function checkTotalResult(float $totalScore): string
+{
+    if ($totalScore >= 8) {
+        return 'A';
+    }
+    if ($totalScore >= 7.0) {
+        return 'B';
+    }
+    if ($totalScore >= 6) {
+        return 'C';
+    }
+    if ($totalScore >= 4.0) {
+        return 'D';
+    }
+    return 'F';
+}
+

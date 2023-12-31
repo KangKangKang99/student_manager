@@ -59,32 +59,26 @@ return new class extends Migration {
             $table->text('note')->nullable();
             $table->timestamps();
         });
-        Schema::create('course_semesters', function (Blueprint $table) {
+        Schema::create('classes', function (Blueprint $table) {
             $table->id();
+            $table->string('code');
+            $table->string('name');
+            $table->json('schedule')->nullable();
             $table->bigInteger('semester_id')->unsigned();
             $table->bigInteger('course_id')->unsigned();
             $table->foreign('semester_id')->references('id')->on('semesters')->onDelete('cascade');
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
             $table->timestamps();
         });
-        Schema::create('classes', function (Blueprint $table) {
+        Schema::create('class_students', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('course_semester_id')->unsigned();
-            $table->string('code');
-            $table->string('name');
-            $table->json('schedule')->nullable();
-            $table->foreign('course_semester_id')->references('id')->on('course_semesters')->onDelete('cascade');
-            $table->timestamps();
-        });
-        Schema::create('course_semester_students', function (Blueprint $table) {
-            $table->bigInteger('course_semester_id')->unsigned();
+            $table->bigInteger('class_id')->unsigned();
             $table->bigInteger('student_id')->unsigned();
-            $table->tinyInteger('attendance_score')->nullable()->comment('điểm danh');
-            $table->tinyInteger('midterm_score')->nullable()->comment('điểm giữa kỳ');
-            $table->tinyInteger('final_score')->nullable()->comment('điểm cuối kỳ');
-            $table->tinyInteger('total_score')->nullable()->comment('điểm tổng kết');
-
-            $table->foreign('course_semester_id')->references('id')->on('course_semesters')->onDelete('cascade');
+            $table->double('attendance_score')->nullable()->comment('điểm danh');
+            $table->double('midterm_score')->nullable()->comment('điểm giữa kỳ');
+            $table->double('final_score')->nullable()->comment('điểm cuối kỳ');
+            $table->tinyInteger('status')->default(1)->comment('1: chưa tổng kết, 2: đã tổng kết');
+            $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->timestamps();
         });

@@ -16,7 +16,7 @@ class MajorResource extends Resource
     protected static ?string $model = Major::class;
 
     protected static ?string $navigationGroup = 'Quản lý đào tạo';
-    protected static ?string $navigationIcon = 'heroicon-m-presentation-chart-bar';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?int $navigationSort = 1;
 

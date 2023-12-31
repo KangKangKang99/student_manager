@@ -19,7 +19,7 @@ use Illuminate\Validation\Rules\Unique;
 class SemesterResource extends Resource
 {
     protected static ?string $model = Semester::class;
-    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Quản lý đào tạo';
     protected static ?int $navigationSort = 2;
 

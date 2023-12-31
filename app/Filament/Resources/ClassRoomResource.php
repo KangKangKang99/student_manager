@@ -82,9 +82,9 @@ class ClassRoomResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('code')->label(__('class code'))->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('courseSemester.course.code')->label(__('course code'))->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('courseSemester.semester')->label(__('semester'))
-                    ->state(fn($record) => $record->courseSemester->semester->year . $record->courseSemester->semester->semester),
+                Tables\Columns\TextColumn::make('course.code')->label(__('course code'))->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('semester')->label(__('semester'))
+                    ->state(fn($record) => $record->semester->year . $record->semester->semester),
                 Tables\Columns\TextColumn::make('name')->label(__('class name'))->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('schedule')->label(__('schedule'))->searchable()->sortable()
                     ->formatStateUsing(function ($state) {

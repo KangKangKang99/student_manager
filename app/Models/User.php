@@ -13,6 +13,7 @@ class User extends Authenticatable
 
     const ROLE_SUPER_ADMIN = 1;
     const ROLE_ADMIN = 2;
+    const ROLE_STUDENT = 3;
 
     /**
      * The attributes that are mass assignable.
@@ -46,4 +47,5 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
 }
