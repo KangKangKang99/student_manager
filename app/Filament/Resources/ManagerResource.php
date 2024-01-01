@@ -10,7 +10,7 @@ use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Psy\Util\Str;
+use Illuminate\Database\Eloquent\Builder;
 
 class ManagerResource extends Resource
 {
@@ -100,7 +100,9 @@ class ManagerResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])->modifyQueryUsing(function (Builder $query) {
+                return $query->whereNot('role', User::ROLE_STUDENT);
+            });
     }
 
     public static function getRelations(): array

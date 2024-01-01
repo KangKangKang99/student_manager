@@ -1,0 +1,36 @@
+@import '/vendor/filament/filament/resources/css/theme.css';
+
+@config 'tailwind.config.js';
+
+
+.fi-sidebar-group > div {
+    background: #a7b7dd;
+}
+
+.fi-header-heading {
+    background: #e0f1f7;
+    padding: 4px;
+}
+
+.fi-ta-table thead {
+    background: #f0dcc4;
+}
+
+.fi-header > div:first-child {
+    width: 100%;
+
+}
+
+.fi-account-widget {
+    --col-span-default: span 2/span 1 !important;
+}
+
+.fi-simple-main {
+    /*background: #e0f1f7!important;*/
+    background: rgb(195,182,34);
+    background: linear-gradient(13deg, rgba(195,182,34,0.3981967787114846) 27%, rgba(36,146,195,0.5074404761904762) 66%);
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+.fi-simple-header > div, .fi-simple-header-heading {
+ color: white;
+}

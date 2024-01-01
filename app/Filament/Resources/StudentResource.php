@@ -134,12 +134,15 @@ class StudentResource extends Resource
                             [
                                 Forms\Components\Repeater::make('class')->label('')->disabled()->visibleOn('edit')->schema(
                                     [
-                                        Forms\Components\Grid::make(5)->schema(
+                                        Forms\Components\Grid::make(9)->schema(
                                             [
-                                                Forms\Components\TextInput::make('code')->label(__('Học phần - lớp - học kỳ'))->columnSpan(2),
+                                                Forms\Components\TextInput::make('code')->label(__('Học phần - lớp - học kỳ'))->columnSpan(3),
                                                 Forms\Components\TextInput::make('status')->label(__('status')),
                                                 Forms\Components\TextInput::make('score')->label(__('Total score')),
                                                 Forms\Components\TextInput::make('result')->label(__('Kết quả')),
+                                                Forms\Components\TextInput::make('attendance')->label(__('Chuyên cần')),
+                                                Forms\Components\TextInput::make('midterm')->label(__('Giữa kỳ')),
+                                                Forms\Components\TextInput::make('final')->label(__('Cuối kỳ')),
                                             ]
                                         ),
                                     ]

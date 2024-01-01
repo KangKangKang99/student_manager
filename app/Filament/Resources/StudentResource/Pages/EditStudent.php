@@ -7,11 +7,19 @@ use App\Models\ClassStudent;
 use App\Models\User;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
 
 class EditStudent extends EditRecord
 {
     protected static string $resource = StudentResource::class;
+
+    public function getHeading(): string|Htmlable
+    {
+        return Auth::user()->role === User::ROLE_STUDENT
+            ? 'Thông tin cá nhân'
+            : 'Chỉnh sửa thông tin sinh viên';
+    }
 
     protected function getHeaderActions(): array
     {
@@ -61,6 +69,9 @@ class EditStudent extends EditRecord
                     'result' => $item->status == ClassStudent::STATUS_CALCULATED
                         ? checkTotalResult(calcTotalScore(data_get($item, 'attendance_score', 0), data_get($item, 'midterm_score', 0), data_get($item, 'final_score', 0)), data_get($item, 'midterm_score', 0), data_get($item, 'final_score', 0))
                         : '',
+                    'midterm' => data_get($item, 'midterm_score'),
+                    'final' => data_get($item, 'final_score'),
+                    'attendance' => data_get($item, 'attendance_score'),
                 ];
             });
         }
