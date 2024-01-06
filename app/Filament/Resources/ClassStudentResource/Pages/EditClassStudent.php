@@ -13,7 +13,7 @@ class EditClassStudent extends EditRecord
 
     protected function getHeaderActions(): array
     {
-        if ($this->record->status = ClassStudent::STATUS_CALCULATED) {
+        if ($this->record->status == ClassStudent::STATUS_CALCULATED) {
             {
                 return [];
             }
